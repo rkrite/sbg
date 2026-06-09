@@ -31,6 +31,12 @@ class UI {
         this.btnLoginModal = document.getElementById('btn-login-modal');
 
         this.initEventListeners();
+
+        // Check for persistent login
+        const savedUser = localStorage.getItem('sbg_user');
+        if (savedUser) {
+            this.handleLoginSuccess(savedUser);
+        }
         this.loadScores();
     }
 
@@ -115,6 +121,7 @@ class UI {
 
         this.btnLogout.addEventListener('click', () => {
             this.currentUser = null;
+            localStorage.removeItem('sbg_user');
             this.userDisplay.textContent = 'Not logged in';
             this.btnLoginModal.classList.remove('hidden');
             this.btnLogout.classList.add('hidden');
@@ -164,6 +171,7 @@ class UI {
 
     handleLoginSuccess(username) {
         this.currentUser = username;
+        localStorage.setItem('sbg_user', username);
         this.userDisplay.textContent = `Player: ${username}`;
         this.btnLoginModal.classList.add('hidden');
         this.btnLogout.classList.remove('hidden');
