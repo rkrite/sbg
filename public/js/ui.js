@@ -57,6 +57,10 @@ class UI {
             document.getElementById('btn-new-game').click();
         });
 
+        document.getElementById('btn-admire-puzzle').addEventListener('click', () => {
+            this.winOverlay.classList.add('hidden');
+        });
+
         document.getElementById('show-colors-toggle').addEventListener('change', (e) => {
             this.game.showColors = e.target.checked;
             this.renderBoard(this.game);
