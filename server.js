@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,8 +33,25 @@ const getUsers = () => {
     });
 };
 
+// Rate limiters
+const registerLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 create account requests per window
+    message: { error: 'Too many accounts created from this IP, please try again after 15 minutes' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20, // Limit each IP to 20 login requests per window
+    message: { error: 'Too many login attempts from this IP, please try again after 15 minutes' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 // Register
-app.post('/api/register', (req, res) => {
+app.post('/api/register', registerLimiter, (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
 
@@ -48,7 +66,7 @@ app.post('/api/register', (req, res) => {
 });
 
 // Login
-app.post('/api/login', (req, res) => {
+app.post('/api/login', loginLimiter, (req, res) => {
     const { username, password } = req.body;
     const users = getUsers();
     const user = users.find(u => u.username === username);
