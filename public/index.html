@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Battle</title>
+    <meta name="description" content="Play the modern Star Battle puzzle game online.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header>
+            <div class="logo">⭐ Star Battle</div>
+            <div class="auth-controls">
+                <span id="user-display">Not logged in</span>
+                <button id="btn-login-modal">Login / Register</button>
+                <button id="btn-logout" class="hidden">Logout</button>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main>
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label for="size-select">Puzzle Size:</label>
+                    <select id="size-select">
+                        <option value="random">Random (6-10)</option>
+                        <option value="6">6x6</option>
+                        <option value="7">7x7</option>
+                        <option value="8">8x8</option>
+                        <option value="9">9x9</option>
+                        <option value="10">10x10</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="toggle">
+                        <input type="checkbox" id="show-colors-toggle" checked>
+                        <span class="slider"></span>
+                        Show regions in color
+                    </label>
+                </div>
+
+                <button id="btn-new-game" class="primary-btn">New Game</button>
+            </div>
+
+            <div class="game-container">
+                <div id="loading-overlay" class="hidden">
+                    <div class="spinner"></div>
+                    <p>Generating Puzzle...</p>
+                </div>
+                <div id="win-overlay" class="hidden">
+                    <h2>You Win!</h2>
+                    <p>Time: <span id="win-time"></span>s</p>
+                    <button id="btn-play-again" class="primary-btn">Play Again</button>
+                </div>
+                <div class="timer">Time: <span id="time-display">0</span>s</div>
+                <div id="board" class="board"></div>
+            </div>
+
+            <!-- High Scores Area -->
+            <div class="scores-panel">
+                <h2>High Scores</h2>
+                <div id="scores-container">
+                    <p>Loading scores...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Login Modal (using native dialog) -->
+    <dialog id="login-dialog">
+        <form method="dialog" id="login-form">
+            <h2>Login or Register</h2>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            
+            <div id="register-fields" class="hidden">
+                <div class="input-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob">
+                </div>
+                <div class="input-group">
+                    <label for="city">City of Birth</label>
+                    <input type="text" id="city" placeholder="e.g. New York">
+                </div>
+            </div>
+
+            <div class="error-message" id="login-error"></div>
+            
+            <div style="margin-top: 1rem; margin-bottom: 0.5rem;">
+                <a href="#" id="link-forgot-password" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
+            </div>
+
+            <div class="dialog-actions">
+                <button type="button" id="btn-cancel-login">Cancel</button>
+                <button type="button" id="btn-show-register" class="secondary-btn">Register</button>
+                <button type="button" id="btn-register" class="secondary-btn hidden">Submit Registration</button>
+                <button type="submit" id="btn-login" class="primary-btn">Login</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Reset Password Modal -->
+    <dialog id="reset-dialog">
+        <form method="dialog" id="reset-form">
+            <h2>Reset Password</h2>
+            <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #cbd5e1;">Enter your security info to reset your password.</p>
+            <div class="input-group">
+                <label for="reset-username">Username</label>
+                <input type="text" id="reset-username" required>
+            </div>
+            <div class="input-group">
+                <label for="reset-dob">Date of Birth</label>
+                <input type="date" id="reset-dob" required>
+            </div>
+            <div class="input-group">
+                <label for="reset-city">City of Birth</label>
+                <input type="text" id="reset-city" required>
+            </div>
+            <div class="input-group">
+                <label for="reset-new-password">New Password</label>
+                <input type="password" id="reset-new-password" required>
+            </div>
+            <div class="error-message" id="reset-error"></div>
+            <div id="reset-success" style="color: var(--secondary); font-size: 0.875rem; min-height: 1.2rem;"></div>
+            <div class="dialog-actions">
+                <button type="button" id="btn-cancel-reset">Close</button>
+                <button type="button" id="btn-submit-reset" class="primary-btn">Reset Password</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/generator.js"></script>
+    <script src="/js/game.js"></script>
+    <script src="/js/ui.js"></script>
+</body>
+</html>
